@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="content-security-policy" content="upgrade-insecure-requests" />
+
+
+  <title> Chunqiu Steven Xia </title>
+
+  <!-- Bootstrap core CSS -->
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,300italic' rel='stylesheet' type='text/css'>
+  <link href="bootstrap.min.css" rel="stylesheet">
+  <link href="jumbotron-narrow.css" rel="stylesheet">
+  <link href="main.css" rel="stylesheet">
+  <script type='text/javascript' src="jquery.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script>
+    $(document).ready(function() {
+      // add a hash to the URL when the user clicks on a tab
+      $('a[data-toggle="tab"]').on('click', function(e) {
+	history.pushState(null, null, $(this).attr('href'));
+      });
+      // navigate to a tab when the history changes
+      window.addEventListener("popstate", function(e) {
+	var activeTab = $('[href=' + location.hash + ']');
+	if (activeTab.length) {
+	  activeTab.tab('show');
+	} else {
+	  $('a[href=#about]').tab('show');
+	}
+      });
+      $('a[href=#about]').tab('show');
+    })
+  </script>
+  </head>
+
+  <body>
+
+<div class="container">
+  <div class="header">
+    <ul class="nav nav-pills pull-right" id="tabs">
+      <li><a href="#about" data-toggle="tab">about</a></li>
+    </ul>
+    <h3><strong>Chunqiu Steven Xia</strong></h3>
+  </div>
+<div class="tab-content">
+
+<div class="col-lg-12">
+    <div class="media">
+      <div class="media-left pull-left effect">
+        <img src="photo.jpeg" style="border-radius: 50%" width="140px">
+      </div>
+      <div class="media-body">
+        <br/><br/>
+        PhD Student
+        <br/>
+	<a href="https://cs.illinois.edu/">UIUC</a> <br/>
+        Office: SC 2107
+        <br/>
+        Email: chunqiu2 [at] illinois.edu
+        <br/>
+        <a href="https://twitter.com/steven_xia_"><img src="twitter.png" width="20"></a>
+        <a href="https://github.com/brutalsavage"><img src="github.png" width="20"></a>
+        <a href="https://scholar.google.com/citations?user=-PCjRp8AAAAJ&hl=en"><img src="scholar.png" width="20"></a>
+      </div>
+    </div>
+</div>
+
+<div class="tab-pane" id="about">
+<div class="col-lg-12">
+  <h3>About Me</h3>
+      <p>
+        I am a 2nd year Computer Science PhD student at <a href="https://cs.illinois.edu/">UIUC</a> advised by <a
+          href="http://lingming.cs.illinois.edu/">Lingming Zhang</a>.
+        My research interest lies in the intersection of Machine Learning and Software Engineering.
+      </p>
+      <p>
+         Before coming to UIUC, I completed my undergrad at the <a href="https://www.ece.utoronto.ca/">University of Toronto</a> where
+        I was fortunate to work with <a href="https://www.eecg.utoronto.ca/~enright/">Natalie Enright Jerger</a>,
+        <a href="https://security.csl.toronto.edu/">David Lie</a>, <a href="https://www.papernot.fr/">Nicolas Papernot</a>
+        and <a href="https://www.eecg.utoronto.ca/~shuruiz/">Shurui Zhou</a>.
+      </p>
+  <h3>Selected Publications</h3>
+  <ul>
+
+
+ <li>
+   <span class="paper-title">Conversational Automated Program Repair </span>
+   <span class="paper-conf">Spotlight in ICLR Deep Learning for Code (DL4C) workshop </span>
+   <br/>
+   <span class="paper-authors">Chunqiu Steven Xia and <a href="http://lingming.cs.illinois.edu/">Lingming Zhang</a></span> | May, 2023.
+   <div>
+   [ <a href="https://arxiv.org/abs/2301.13246">preprint</a> ]
+   </div>
+ </li>
+    <li>
+ <span class="paper-title">Large Language Models are Zero-Shot Fuzzers: Fuzzing Deep-Learning Libraries via Large Language Models</span>
+ <span class="paper-conf">In 32nd International Symposium on Software Testing and Analysis
+(ISSTA 2023) </span>
+ <br/>
+ <span class="paper-authors"><a href="https://dengyinlin.github.io/">Yinlin Deng</a>, Chunqiu Steven Xia, <a href="https://github.com/HurryPeng">Haoran Peng</a>,
+   <a href="https://yangchenyuan.github.io/">Chenyuan Yang</a>, <a href="http://lingming.cs.illinois.edu/">Lingming Zhang</a></span> | July, 2023.
+ <div>
+ [ <a href="https://arxiv.org/abs/2212.14834" >preprint</a> ]
+ </div>
+ </li>
+    <li>
+ <span class="paper-title">Automated program repair in the era of large pre-trained language models</span>
+ <span class="paper-conf"> In Proceedings of the 45th IEEE/ACM International Conference on Software Engineering
+(ICSE 2023) </span>
+ <br/>
+ <span class="paper-authors">Chunqiu Steven Xia, <a href="https://yuxiang.cs.illinois.edu/">Yuxiang Wei</a>,
+   <a href="http://lingming.cs.illinois.edu/">Lingming Zhang</a></span> | May, 2023.
+ <div>
+ [ <a href="http://lingming.cs.illinois.edu/publications/icse2023a.pdf">preprint</a> | <a href="https://zenodo.org/record/7622931">code</a> ]
+ </div>
+ </li>
+    <li>
+ <span class="paper-title">Less Training, More Repairing Please: Revisiting Automated Program Repair via Zero-shot Learning</span>
+ <span class="paper-conf"> In Proceedings of 30th ACM SIGSOFT International Symposium on the Foundations of Software Engineering
+(FSE 2023) </span>
+ <br/>
+ <span class="paper-authors">Chunqiu Steven Xia and <a href="http://lingming.cs.illinois.edu/">Lingming Zhang</a></span> | Nov, 2022.
+ <div>
+ [ <a href="https://dl.acm.org/doi/abs/10.1145/3540250.3549101">paper</a> | <a href="https://zenodo.org/record/6819444">code</a> ]
+ </div>
+ </li>
+</ul>
+  <h3>Invited Talks</h3>
+  <ul>
+    <li><a href="https://www.microsoft.com/en-us/research/group/dataai/">Microsoft Data&AI</a>:<span class="paper-title"> Leveraging Large Language Models for Software Engineering Tasks</span></li>
+    <li><a href="https://software-lab.org/">Software Lab</a> @ University of Stuttgart: <span class="paper-title">Automated Program Repair in the era of Large Language Models</span> </li>
+  </ul>
+  <p style="position: fixed; bottom: 0; width:100%; "> website template shamelessly taken from <a href="https://cseweb.ucsd.edu/~dstefan/">Deian Stefan</a> </p>
+</div>
+</div>
+</div> <!-- tab-content -->
+</div> <!-- container -->
+</body>
+</html>
