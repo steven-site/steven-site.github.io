@@ -182,6 +182,10 @@ font-size:6pt;
 .profile .media-body img {
   vertical-align: bottom;
 }
+/* Research directions list in About Me */
+.research-directions li + li {
+  margin-top: 4px;
+}
 /* Profile photo: cropped to a square with rounded corners */
 .profile-photo {
   width: 140px;

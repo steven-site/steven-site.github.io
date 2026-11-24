@@ -32,16 +32,16 @@
       $('a[data-toggle="tab"]').on('click', function(e) {
 	history.pushState(null, null, $(this).attr('href'));
       });
-      // navigate to a tab when the history changes
-      window.addEventListener("popstate", function(e) {
-	var activeTab = $('[href=' + location.hash + ']');
-	if (activeTab.length) {
-	  activeTab.tab('show');
-	} else {
-	  $('a[href=#about]').tab('show');
-	}
-      });
-      $('a[href=#about]').tab('show');
+      // show the tab named in the URL (e.g. #publications), or About if none;
+      // runs on page load and when going back/forward. The panes' ids end in
+      // "-pane" so the browser doesn't also jump down to the section on load.
+      function showTabFromHash() {
+        var tabs = $('#tabs a[data-toggle="tab"]');
+        var match = tabs.filter(function() { return this.getAttribute('href') === location.hash; });
+        (match.length ? match : tabs.filter('[href="#about"]')).tab('show');
+      }
+      window.addEventListener('popstate', showTabFromHash);
+      showTabFromHash();
 
       // light/dark toggle: flip the current theme and remember the choice
       $('#theme-toggle').on('click', function() {
@@ -83,8 +83,8 @@
 <div class="container">
   <div class="header">
     <ul class="nav nav-pills pull-right" id="tabs">
-      <li><a href="#about" data-toggle="tab">about</a></li>
-      <li><a href="#publications" data-toggle="tab">publications</a></li>
+      <li><a href="#about" data-target="#about-pane" data-toggle="tab">about</a></li>
+      <li><a href="#publications" data-target="#publications-pane" data-toggle="tab">publications</a></li>
       <li>
         <button type="button" id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
           <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -119,32 +119,61 @@
     </div>
 </div>
 
-<div class="tab-pane" id="about">
+<div class="tab-pane" id="about-pane">
 <div class="col-lg-12">
   <h3>About Me</h3>
       <p>
         Hi, I'm Steven! I'm an incoming Assistant Professor in the School of Computer Science at <a href="https://www.cmu.edu/">Carnegie Mellon University</a>.
-        My research lies at the intersection of Software Engineering and Artificial Intelligence,
-        where I combine core software engineering principles with modern AI,
-        especially large language models (LLMs) and agentic systems.
-        Here is also a <a href="https://www.youtube.com/watch?v=yNaihBvcta4">short video</a> about my research interests.
-      </p>
-      <p>
         Previously, I was a PhD student at <a href="https://cs.illinois.edu/">UIUC</a> advised by <a href="http://lingming.cs.illinois.edu/">Lingming Zhang</a>.
-      </p>
-      <p>
-        Before that, I completed my undergrad at the <a href="https://www.ece.utoronto.ca/">University of Toronto</a> where
-        I was fortunate to work with <a href="https://www.eecg.utoronto.ca/~enright/">Natalie Enright Jerger</a>,
+        Before that, I completed my undergrad at the <a href="https://www.ece.utoronto.ca/">University of Toronto</a>, where
+        I worked with <a href="https://www.eecg.utoronto.ca/~enright/">Natalie Enright Jerger</a>,
         <a href="https://security.csl.toronto.edu/">David Lie</a>, <a href="https://www.papernot.fr/">Nicolas Papernot</a>,
         and <a href="https://www.eecg.utoronto.ca/~shuruiz/">Shurui Zhou</a>.
       </p>
+      <p>
+        My research lies at the intersection of Software Engineering (SE) and Artificial Intelligence (AI),
+        where I combine core software engineering principles with modern AI,
+        especially large language models (LLMs) and agentic systems. 
+        Below are some research directions I'm particularly interested in:
+      </p>
 
-      <details class="prospective" open>
+      <ul class="research-directions">
+        <li>
+          <b>Next-Generation Agentic Solutions</b>:
+          Building agents for challenging software tasks, such as synthesizing production-ready software from scratch, 
+          detecting and repairing difficult vulnerabilities in large codebases, and proving the correctness of critical systems.
+          The goal is to combine software engineering techniques and tools with self-improving agents and harnesses,
+          moving beyond simple automation toward true repository-level intelligence.
+        </li>
+        <li>
+          <b>Training Efficient and Effective Models</b>:
+          Creating better environments from coding and software tasks to train efficient and effective models.
+          This includes turning the rich feedback of software development into training signals, letting agents generate
+          their own training tasks through self-play, and training specialized models for domains such as cybersecurity,
+          formal verification, and even AI research itself.
+        </li>
+        <li>
+          <b>Evaluations for Robustness, Alignment, and Usability</b>:
+          Evaluating and understanding the capabilities of LLMs, agents, and their environments,
+          not just their performance on software tasks but also their alignment, robustness, and usability.
+          This includes building new end-to-end evaluation frameworks that examine both the resulting software and the agent's
+          behavior, designing novel attacks and defenses, and conducting large-scale empirical studies, so that new models
+          can be used effectively and safely for software development.
+        </li>
+      </ul>
+      <p>
+        I believe that once complex software can be created, tested, and refined autonomously, these capabilities can be applied
+        seamlessly to other computer-driven tasks, paving the way toward more advanced automated reasoning and intelligence.
+      </p>
+      
+      <!-- Here is also a <a href="https://www.youtube.com/watch?v=yNaihBvcta4">short video</a> about my research interests. -->
+
+      <details class="prospective">
         <summary>🎓 Prospective PhD applicants</summary>
         <div class="prospective-body">
           <p>
             I am actively recruiting <b>PhD students</b> to start in Fall 2027. 
-            If you are interested and have background in relevant areas 
+            If you are interested and have a background in relevant areas 
             (e.g., coding agents, software engineering, model training, security, formal verification, alignment, and systems),
              please apply to the <a href="https://se-phd.isri.cmu.edu/Prospective%20Students/apply.html">CMU SE PhD program</a>
             and list me as a potential advisor (deadline: December 9th).
@@ -156,7 +185,7 @@
           </p>
           <p>
             Feel free to email me with the subject <code>[Prospective PhD Student]</code>, your CV, and a few
-            sentences on what you would like to work on. Due to volume, I may not be able to reply to every email but I try to read every single one.
+            sentences on what you would like to work on. Due to volume, I may not be able to reply to every email, but I try to read every single one.
           </p>
         </div>
       </details>
@@ -165,7 +194,7 @@
         <summary>💻 Undergraduate &amp; master's students</summary>
         <div class="prospective-body">
           <p>
-            I am happy to work with motivated <b>undergraduate and master's students who are currently enrolled in CMU</b> on research projects.
+            I am happy to work with motivated <b>undergraduate and master's students who are currently enrolled at CMU</b> on research projects.
           </p>
           <p>
             If you are interested, email me with the subject <code>[Undergrad/Master's Research]</code>, your CV, and a
@@ -300,7 +329,7 @@
   <!-- <p> website template shamelessly taken from <a href="https://cseweb.ucsd.edu/~dstefan/">Deian Stefan</a> </p> -->
 </div>
 </div>
-<div class="tab-pane" id="publications">
+<div class="tab-pane" id="publications-pane">
     <div class="col-lg-12">
     <h3>Publications</h3>
     <p> Below is the list of my complete publications. <a href="https://scholar.google.com/citations?user=-PCjRp8AAAAJ&hl=en">Google Scholar</a> also provides such a list. </p>
