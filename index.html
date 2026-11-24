@@ -9,6 +9,16 @@
 
   <title> Chunqiu Steven Xia </title>
 
+  <script>
+    // Apply a saved light/dark choice before the page paints (no flash).
+    try {
+      var savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'light' || savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+      }
+    } catch (e) {}
+  </script>
+
   <!-- Bootstrap core CSS -->
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,300italic' rel='stylesheet' type='text/css'>
   <link href="bootstrap.min.css" rel="stylesheet">
@@ -32,6 +42,38 @@
 	}
       });
       $('a[href=#about]').tab('show');
+
+      // light/dark toggle: flip the current theme and remember the choice
+      $('#theme-toggle').on('click', function() {
+        var root = document.documentElement;
+        var current = root.getAttribute('data-theme') ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        var next = current === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        try { localStorage.setItem('theme', next); } catch (e) {}
+        updateBadgeLogos();
+      });
+
+      // GitHub stars badges: the logo color lives in the badge URL, so swap it
+      // to match the theme (--badge-logo in main.css)
+      function updateBadgeLogos() {
+        var color = getComputedStyle(document.documentElement).getPropertyValue('--badge-logo').trim();
+        if (!color) return;
+        $('img[src*="img.shields.io/github/stars"]').each(function() {
+          var url = new URL(this.getAttribute('src'));
+          if (url.searchParams.get('logoColor') !== color) {
+            url.searchParams.set('logoColor', color);
+            this.setAttribute('src', url.href);
+          }
+        });
+      }
+      updateBadgeLogos();
+      var darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      if (darkQuery.addEventListener) {
+        darkQuery.addEventListener('change', updateBadgeLogos);
+      } else if (darkQuery.addListener) {
+        darkQuery.addListener(updateBadgeLogos);
+      }
     })
   </script>
   </head>
@@ -43,29 +85,36 @@
     <ul class="nav nav-pills pull-right" id="tabs">
       <li><a href="#about" data-toggle="tab">about</a></li>
       <li><a href="#publications" data-toggle="tab">publications</a></li>
+      <li>
+        <button type="button" id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        </button>
+      </li> 
     </ul>
     <h3><strong>Chunqiu Steven Xia</strong></h3>
   </div>
 <div class="tab-content">
 
 <div class="col-lg-12">
-    <div class="media">
+    <div class="media profile">
       <div class="media-left pull-left effect">
-        <img src="photo.jpeg" style="border-radius: 50%" width="140px">
+        <img src="steven_headshot.JPG" class="profile-photo" width="140" height="140" alt="Chunqiu Steven Xia">
       </div>
       <div class="media-body">
-        <br/><br/>
-        PhD Student
+        Incoming Assistant Professor
         <br/>
-	<a href="https://cs.illinois.edu/">University of Illinois Urbana-Champaign</a> <br/>
-        Office: SC 2107
+        School of Computer Science
         <br/>
-        Email: chunqiu2 [at] illinois.edu
+	<a href="https://www.cmu.edu/">Carnegie Mellon University (CMU)</a> <br/>
+        Office: TCS 445
         <br/>
-        <a href="https://twitter.com/steven_xia_"><img src="x.png" width="17"></a>
-        <a href="https://github.com/brutalsavage"><img src="github.png" width="20"></a>
-        <a href="https://scholar.google.com/citations?user=-PCjRp8AAAAJ&hl=en"><img src="scholar.png" width="20"></a>
-        <a href="https://huggingface.co/nevetsaix"><img src="huggingface_logo.png" width="20"></a>
+        Email: stevenx [at] andrew.cmu.edu
+        <br/>
+        <a href="https://twitter.com/steven_xia_"><img src="x.png" class="icon-mono" width="17" alt="X"></a>
+        <a href="https://github.com/brutalsavage"><img src="github.png" class="icon-mono" width="20" alt="GitHub"></a>
+        <a href="https://scholar.google.com/citations?user=-PCjRp8AAAAJ&hl=en"><img src="scholar.png" width="20" alt="Google Scholar"></a>
+        <a href="https://huggingface.co/nevetsaix"><img src="huggingface_logo.png" width="20" alt="Hugging Face"></a>
       </div>
     </div>
 </div>
@@ -74,18 +123,58 @@
 <div class="col-lg-12">
   <h3>About Me</h3>
       <p>
-        I am a final year Computer Science PhD student at <a href="https://cs.illinois.edu/">UIUC</a> advised by <a
-          href="http://lingming.cs.illinois.edu/">Lingming Zhang</a>.
-        My research interest lies in the intersection of Machine Learning and Software Engineering. In my PhD study, I am supported by the Amazon Science Ph.D. Fellowship.
+        Hi, I'm Steven! I'm an incoming Assistant Professor in the School of Computer Science at <a href="https://www.cmu.edu/">Carnegie Mellon University</a>.
+        My research lies at the intersection of Software Engineering and Artificial Intelligence,
+        where I combine core software engineering principles with modern AI,
+        especially large language models (LLMs) and agentic systems.
+        Here is also a <a href="https://www.youtube.com/watch?v=yNaihBvcta4">short video</a> about my research interests.
       </p>
       <p>
-         Before coming to UIUC, I completed my undergrad at the <a href="https://www.ece.utoronto.ca/">University of Toronto</a> where
+        Previously, I was a PhD student at <a href="https://cs.illinois.edu/">UIUC</a> advised by <a href="http://lingming.cs.illinois.edu/">Lingming Zhang</a>.
+      </p>
+      <p>
+        Before that, I completed my undergrad at the <a href="https://www.ece.utoronto.ca/">University of Toronto</a> where
         I was fortunate to work with <a href="https://www.eecg.utoronto.ca/~enright/">Natalie Enright Jerger</a>,
         <a href="https://security.csl.toronto.edu/">David Lie</a>, <a href="https://www.papernot.fr/">Nicolas Papernot</a>,
         and <a href="https://www.eecg.utoronto.ca/~shuruiz/">Shurui Zhou</a>.
       </p>
 
-  <h3>Selected Publications</h3>
+      <details class="prospective" open>
+        <summary>🎓 Prospective PhD applicants</summary>
+        <div class="prospective-body">
+          <p>
+            I am actively recruiting <b>PhD students</b> to start in Fall 2027. 
+            If you are interested and have background in relevant areas 
+            (e.g., coding agents, software engineering, model training, security, formal verification, alignment, and systems),
+             please apply to the <a href="https://se-phd.isri.cmu.edu/Prospective%20Students/apply.html">CMU SE PhD program</a>
+            and list me as a potential advisor (deadline: December 9th).
+          </p>
+          <p>
+            Note that I am mainly affiliated with the <a href="https://s3d.cmu.edu/">Software and Societal Systems Department (S3D)</a> 
+            at CMU, so applying there and listing me will allow me to access your profile.
+            You may also choose to apply to the <a href="https://www.lti.cs.cmu.edu/">Language Technologies Institute</a>.
+          </p>
+          <p>
+            Feel free to email me with the subject <code>[Prospective PhD Student]</code>, your CV, and a few
+            sentences on what you would like to work on. Due to volume, I may not be able to reply to every email but I try to read every single one.
+          </p>
+        </div>
+      </details>
+
+      <details class="prospective undergrad">
+        <summary>💻 Undergraduate &amp; master's students</summary>
+        <div class="prospective-body">
+          <p>
+            I am happy to work with motivated <b>undergraduate and master's students who are currently enrolled in CMU</b> on research projects.
+          </p>
+          <p>
+            If you are interested, email me with the subject <code>[Undergrad/Master's Research]</code>, your CV, and a
+            short note on your background, what you would like to work on, and how many hours per week you can commit.
+          </p>
+        </div>
+      </details>
+
+  <!-- <h3>Selected Publications</h3>
   <ul>
   <li>
    <span class="paper-title">Live-SWE-agent: Can Software Engineering Agents Self-Evolve on the Fly?</span>
@@ -93,7 +182,7 @@
    <br/>
    <span class="paper-authors"><b>Chunqiu Steven Xia</b>, <a href="https://zhewang2001.github.io/">Zhe Wang</a>, Yan Yang, <a href="https://yuxiang.cs.illinois.edu/">Yuxiang Wei</a>, <a href="http://lingming.cs.illinois.edu/">Lingming Zhang</a></span> | Nov, 2025.
    <div>
-   <span> <b><i style="color: #C71585;">First live AI software agent that continuously evolve itself on-the-fly to solve real-world software problems;</i><br/>🏅 <i style="color: #C71585;">Top-1 open-source agent on SWE-bench Verified (79.2%) and SWE-Bench Pro (45.8%)</i></b></span> 
+   <span> <b><i style="color: #C71585;">First live AI software agent that continuously evolves itself on-the-fly to solve real-world software problems;</i><br/>🏅 <i style="color: #C71585;">Top-1 open-source agent on SWE-bench Verified (79.2%) and SWE-Bench Pro (45.8%)</i></b></span> 
    </div>
    [ <a href="https://arxiv.org/abs/2511.13646">preprint</a> | <a href="https://live-swe-agent.github.io/">webpage</a> ] <a href="https://github.com/OpenAutoCoder/live-swe-agent" target="_blank" rel="noopener noreferrer"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/OpenAutoCoder/live-swe-agent?logoColor=3632a8"></a>
    <br/>
@@ -104,7 +193,7 @@
    <br/>
    <span class="paper-authors"><b>Chunqiu Steven Xia*</b>, <a href="https://dengyinlin.github.io/">Yinlin Deng*</a>, <a href="https://www.linkedin.com/in/sorendunn">Soren Dunn</a>, <a href="http://lingming.cs.illinois.edu/">Lingming Zhang</a></span> | June, 2025.
    <div>
-   <span> 🏆 <b> <i style="color: #C71585;">Selected as an ACM SIGSOFT distinguished paper;<br/> Adopted by OpenAI, Meta, DeepSeek, etc to evaluate their recent models and build custom agent scaffolds</i></b></span> 
+   <span> 🏆 <b> <i style="color: #C71585;">Selected as an ACM SIGSOFT distinguished paper;<br/> Adopted by OpenAI, Meta, DeepSeek, etc. to evaluate their recent models and build custom agent scaffolds</i></b></span> 
    <br/>
    </div>
    [ <a href="https://arxiv.org/abs/2407.01489">preprint</a> ] <a href="https://github.com/OpenAutoCoder/Agentless" target="_blank" rel="noopener noreferrer"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/OpenAutoCoder/Agentless?logoColor=3632a8"></a>
@@ -207,33 +296,69 @@
   <br/>
   <br/>
     <br/>
-  <br/>
-  <p> website template shamelessly taken from <a href="https://cseweb.ucsd.edu/~dstefan/">Deian Stefan</a> </p>
+  <br/> -->
+  <!-- <p> website template shamelessly taken from <a href="https://cseweb.ucsd.edu/~dstefan/">Deian Stefan</a> </p> -->
 </div>
 </div>
 <div class="tab-pane" id="publications">
     <div class="col-lg-12">
     <h3>Publications</h3>
-    <p> Below is the list of my complete publications. <a href="https://scholar.google.com/citations?user=-PCjRp8AAAAJ&hl=en/">Google Scholar</a> also provides such list </p>
+    <p> Below is the list of my complete publications. <a href="https://scholar.google.com/citations?user=-PCjRp8AAAAJ&hl=en">Google Scholar</a> also provides such a list. </p>
     <ul>
+  <li>
+   <span class="paper-title">SEC-bench Pro: Can Language Models Solve Long-Horizon Software Security Tasks?</span>
+   <span class="paper-conf"> Preprint </span>
+   <br/>
+   <span class="paper-authors"><a href="https://hwiwonl.ee/">Hwiwon Lee</a>, <a href="https://jiawei-site.github.io/">Jiawei Liu</a>, Dongjun Kim, Wubing Xia, <a href="https://ziqi-zhang.github.io/">Ziqi Zhang</a>, <b>Chunqiu Steven Xia</b>, <a href="http://lingming.cs.illinois.edu/">Lingming Zhang</a></span> | May, 2026.
+   <div>
+   [ <a href="https://arxiv.org/abs/2605.26548">preprint</a> | <a href="https://sec-bench.github.io/">leaderboard</a> ] <a href="https://github.com/SEC-bench/SEC-bench-Pro" target="_blank" rel="noopener noreferrer"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/SEC-bench/SEC-bench-Pro?logoColor=3632a8"></a>
+   </div>
+  </li>
+  <li>
+   <span class="paper-title">Do These Violent Delights Have Violent Ends? Measuring the Post-Merge Fate of Agentic Code</span>
+   <span class="paper-conf"> Preprint </span>
+   <br/>
+   <span class="paper-authors"><b>Chunqiu Steven Xia</b> and <a href="https://courtney-e-miller.github.io/">Courtney Miller</a></span> | July, 2026.
+   <div>
+   [ <a href="https://arxiv.org/abs/2607.09902">preprint</a> | <a href="https://post-merge-reality.github.io/">webpage</a> | <a href="https://github.com/post-merge-reality/post-merge-reality">code</a> ]
+   </div>
+  </li>
+  <li>
+   <span class="paper-title">SwarmResearch: Orchestrating Coding Agents for Open-Ended Discovery</span>
+   <span class="paper-conf"> Preprint </span>
+   <br/>
+   <span class="paper-authors"><a href="https://yuvrajvirk.github.io/">Yuvraj Virk</a>, Zack Edds, <b>Chunqiu Steven Xia</b>, <a href="http://lingming.cs.illinois.edu/">Lingming Zhang</a></span> | July, 2026.
+   <div>
+   [ <a href="https://arxiv.org/abs/2607.02807">preprint</a> | <a href="https://github.com/SwarmResearch/SwarmResearch">code</a> ]
+   </div>
+  </li>
   <li>
    <span class="paper-title">Live-SWE-agent: Can Software Engineering Agents Self-Evolve on the Fly?</span>
    <span class="paper-conf"> Preprint </span>
    <br/>
    <span class="paper-authors"><b>Chunqiu Steven Xia</b>, <a href="https://zhewang2001.github.io/">Zhe Wang</a>, Yan Yang, <a href="https://yuxiang.cs.illinois.edu/">Yuxiang Wei</a>, <a href="http://lingming.cs.illinois.edu/">Lingming Zhang</a></span> | Nov, 2025.
    <div>
-   <span> <b><i style="color: #C71585;">First live AI software agent that continuously evolve itself on-the-fly to solve real-world software problems;</i><br/>🏅 <i style="color: #C71585;">Top-1 open-source agent on SWE-bench Verified (79.2%) and SWE-Bench Pro (45.8%)</i></b></span> 
+   <span> <b><i style="color: #C71585;">First live AI software agent that continuously evolves itself on-the-fly to solve real-world software problems;</i><br/>🏅 <i style="color: #C71585;">Top-1 open-source agent on SWE-bench Verified (79.2%) and SWE-Bench Pro (45.8%)</i></b></span>
    </div>
    [ <a href="https://arxiv.org/abs/2511.13646">preprint</a> | <a href="https://live-swe-agent.github.io/">webpage</a> ] <a href="https://github.com/OpenAutoCoder/live-swe-agent" target="_blank" rel="noopener noreferrer"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/OpenAutoCoder/live-swe-agent?logoColor=3632a8"></a>
    <br/>
    </li>
+  <li>
+   <span class="paper-title">UniDebugger: Hierarchical Multi-Agent Framework for Unified Software Debugging</span>
+   <span class="paper-conf"> In Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing (EMNLP 2025) </span>
+   <br/>
+   <span class="paper-authors">Cheryl Lee, <b>Chunqiu Steven Xia</b>, Longji Yang, Jen-tse Huang, Zhouruixin Zhu, <a href="http://lingming.cs.illinois.edu/">Lingming Zhang</a>, Michael R. Lyu</span> | Nov, 2025.
+   <div>
+   [ <a href="https://arxiv.org/abs/2404.17153">preprint</a> | <a href="https://github.com/AcceptePapier/UniDebugger">code</a> ]
+   </div>
+  </li>
   <li>
    <span class="paper-title">Agentless 😺: Demystifying LLM-based Software Engineering Agents</span>
    <span class="paper-conf"> In Proceedings of 33rd ACM SIGSOFT International Symposium on the Foundations of Software Engineering (FSE 2025) </span>
    <br/>
    <span class="paper-authors"><b>Chunqiu Steven Xia*</b>, <a href="https://dengyinlin.github.io/">Yinlin Deng*</a>, <a href="https://www.linkedin.com/in/sorendunn">Soren Dunn</a>, <a href="http://lingming.cs.illinois.edu/">Lingming Zhang</a></span> | June, 2025.
    <div>
-   <span> 🏆 <b> <i style="color: #C71585;">Selected as an ACM SIGSOFT distinguished paper;<br/> Adopted by OpenAI, Meta, DeepSeek, etc to evaluate their recent models and build custom agent scaffolds</i></b></span> 
+   <span> 🏆 <b> <i style="color: #C71585;">Selected as an ACM SIGSOFT distinguished paper;<br/> Adopted by OpenAI, Meta, DeepSeek, etc. to evaluate their recent models and build custom agent scaffolds</i></b></span> 
    <br/>
    </div>
    [ <a href="https://arxiv.org/abs/2407.01489">preprint</a> ] <a href="https://github.com/OpenAutoCoder/Agentless" target="_blank" rel="noopener noreferrer"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/OpenAutoCoder/Agentless?logoColor=3632a8"></a>
@@ -272,7 +397,7 @@
    <span class="paper-conf"> In Proceedings of the 46th IEEE/ACM International Conference on Software Engineering (ICSE 2024) </span>
      <br/>
    <span class="paper-authors"><a href="https://dengyinlin.github.io/">Yinlin Deng</a>, <b>Chunqiu Steven Xia</b>,
-   <a href="https://yangchenyuan.github.io/">Chenyuan Yang</a>, <a href="https://twitter.com/dylanszzhang">Shizhuo Dylan Zhang</a>, <a href="https://www.linkedin.com/in/shujing-yang6/">Shujing Yang</a>, <a href="http://lingming.cs.illinois.edu/">Lingming Zhang</a></span> | April, 2024.
+   <a href="https://yangchenyuan.github.io/">Chenyuan Yang</a>, <a href="https://dylanzsz.github.io/">Shizhuo Dylan Zhang</a>, <a href="https://www.linkedin.com/in/shujing-yang6/">Shujing Yang</a>, <a href="http://lingming.cs.illinois.edu/">Lingming Zhang</a></span> | April, 2024.
    <div>
    [ <a href="https://arxiv.org/abs/2304.02014">preprint</a> ]
    </div>
@@ -291,7 +416,7 @@
   </li>
   <li>
  <span class="paper-title">Copiloting the Copilots: Fusing Large Language Models with Completion Engines for Automated Program Repair</span>
- <span class="paper-conf"> In Proceedings of the 31th ACM SIGSOFT International Symposium on the Foundations of Software Engineering
+ <span class="paper-conf"> In Proceedings of the 31st ACM SIGSOFT International Symposium on the Foundations of Software Engineering
 (FSE 2023) </span>
  <br/>
  <a href="https://yuxiang.cs.illinois.edu/">Yuxiang Wei</a>, <span class="paper-authors"><b>Chunqiu Steven Xia</b>,
@@ -350,7 +475,7 @@
  <span class="paper-conf"> In Proceedings of the 45th IEEE/ACM International Conference on Software Engineering
 (ICSE 2023) </span>
  <br/>
- <span class="paper-authors"><b>Chunqiu Steven Xia</b>, <a href="https://saikatdutta.web.illinois.edu/">Saikat Dutta</a>, <a href="https://misailo.cs.illinois.edu/">Sasa Misailovic</a>, <a href="https://mir.cs.illinois.edu/marinov/">Darko Marinov</a>,
+ <span class="paper-authors"><b>Chunqiu Steven Xia</b>, <a href="https://www.cs.cornell.edu/~saikatd/">Saikat Dutta</a>, <a href="https://misailo.cs.illinois.edu/">Sasa Misailovic</a>, <a href="https://mir.cs.illinois.edu/marinov/">Darko Marinov</a>,
    <a href="http://lingming.cs.illinois.edu/">Lingming Zhang</a></span> | May, 2023.
  <div>
  [ <a href="https://mir.cs.illinois.edu/marinov/publications/XiaETAL23FASER.pdf">paper</a> | <a href="https://github.com/ise-uiuc/FASER">code</a> ]

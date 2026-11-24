@@ -1,11 +1,267 @@
+/* ---------- Theme colors ----------
+   Light values reproduce the original look. Dark mode follows the
+   visitor's system setting unless they pick one with the header toggle,
+   which sets data-theme="light" | "dark" on <html>. */
+:root {
+  color-scheme: light;
+  --bg: #fff;
+  --text: #333;
+  --link: #428bca;
+  --link-hover: #2a6496;
+  --border: #e5e5e5;
+  --pill-hover: #eee;
+  --paper-title: #551a8b;
+  --highlight: #C71585;
+  --code-bg: #f9f2f4;
+  --code: #c7254e;
+  --icon-invert: 0;
+  --badge-filter: none;
+  --badge-logo: 3632a8;
+  --phd-accent: #551a8b;
+  --phd-tint: #fbfaff;
+  --phd-hover: #f3f0fb;
+  --ug-accent: #0f766e;
+  --ug-tint: #f5fbfa;
+  --ug-hover: #e6f4f2;
+  --moon: inline-block;
+  --sun: none;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #16161b;
+    --text: #d4d4da;
+    --link: #7cb7f5;
+    --link-hover: #a9d1ff;
+    --border: #2c2c34;
+    --pill-hover: #23232a;
+    --paper-title: #fff;
+    --highlight: #f472b6;
+    --code-bg: #2b1d25;
+    --code: #ff8fb4;
+    --icon-invert: 1;
+    --badge-filter: invert(0.9) hue-rotate(180deg);
+    --badge-logo: 9f9f9f;
+    --phd-accent: #c4a5ff;
+    --phd-tint: #1d1a26;
+    --phd-hover: #262131;
+    --ug-accent: #3ccfbb;
+    --ug-tint: #15211f;
+    --ug-hover: #1b2c29;
+    --moon: none;
+    --sun: inline-block;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #16161b;
+  --text: #d4d4da;
+  --link: #7cb7f5;
+  --link-hover: #a9d1ff;
+  --border: #2c2c34;
+  --pill-hover: #23232a;
+  --paper-title: #fff;
+  --highlight: #f472b6;
+  --code-bg: #2b1d25;
+  --code: #ff8fb4;
+  --icon-invert: 1;
+  --badge-filter: invert(0.9) hue-rotate(180deg);
+  --badge-logo: 9f9f9f;
+  --phd-accent: #c4a5ff;
+  --phd-tint: #1d1a26;
+  --phd-hover: #262131;
+  --ug-accent: #3ccfbb;
+  --ug-tint: #15211f;
+  --ug-hover: #1b2c29;
+  --moon: none;
+  --sun: inline-block;
+}
+
+/* Always reserve the scrollbar's space, so switching between the short
+   About tab and the long Publications tab doesn't shift the page sideways */
+html {
+  scrollbar-gutter: stable;
+}
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+a {
+  color: var(--link);
+}
+a:hover,
+a:focus {
+  color: var(--link-hover);
+}
+.header {
+  border-bottom-color: var(--border);
+}
+.nav > li > a:hover,
+.nav > li > a:focus {
+  background-color: var(--pill-hover);
+}
+code {
+  background-color: var(--code-bg);
+  color: var(--code);
+}
+/* Black logos (X, GitHub) turn white in dark mode */
+img.icon-mono {
+  filter: invert(var(--icon-invert));
+}
+/* GitHub stars badges (shields.io images) go dark in dark mode */
+img[src*="img.shields.io"] {
+  filter: var(--badge-filter);
+}
+/* Highlight lines in the publication list use inline color: #C71585 */
+[style*="#C71585" i] {
+  color: var(--highlight) !important;
+}
+
+/* Light/dark toggle in the header */
+.theme-toggle {
+  display: block;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  color: var(--link);
+  line-height: 20px;
+  cursor: pointer;
+}
+.theme-toggle:hover {
+  background-color: var(--pill-hover);
+  color: var(--link-hover);
+}
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
+}
+.theme-toggle svg {
+  width: 18px;
+  height: 18px;
+  vertical-align: -4px;
+}
+.theme-toggle .icon-moon {
+  display: var(--moon);
+}
+.theme-toggle .icon-sun {
+  display: var(--sun);
+}
+/* Phones: slimmer nav buttons so they don't crowd the name */
+@media (max-width: 480px) {
+  .nav-pills > li > a {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .theme-toggle {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+}
+
 /* straight up taken from Keith's site*/
 .tiny {
 font-size:6pt;
 }
 .paper-title {
-  color: #551a8b;
+  color: var(--paper-title);
   font-weight: bold;
 }
 .paper-conf {
   font-style: italic;
+}
+/* Contact info sits at the bottom of the photo, icons flush with its bottom
+   edge. Phones keep normal flow: the text wraps taller than the photo there. */
+@media (min-width: 481px) {
+  .media.profile {
+    display: flex;
+    align-items: flex-end;
+  }
+}
+.profile .media-body img {
+  vertical-align: bottom;
+}
+/* Profile photo: cropped to a square with rounded corners */
+.profile-photo {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  object-position: 50% 100%; /* crop extra height from the top */
+  border-radius: 18px;
+}
+/* Lists line up with the headings instead of the default 40px indent */
+.tab-pane ul {
+  padding-left: 1.1em;
+}
+
+/* Prospective students dropdown */
+.prospective {
+  --accent: var(--phd-accent);
+  --tint: var(--phd-tint);
+  --hover: var(--phd-hover);
+  margin: 20px 0 10px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+  background: var(--tint);
+}
+.prospective.undergrad {
+  --accent: var(--ug-accent);
+  --tint: var(--ug-tint);
+  --hover: var(--ug-hover);
+}
+.prospective + .prospective {
+  margin-top: 10px;
+}
+.prospective summary {
+  display: block;
+  list-style: none;
+  cursor: pointer;
+  padding: 10px 14px;
+  font-weight: bold;
+  color: var(--accent);
+  border-radius: 6px;
+  user-select: none;
+}
+.prospective summary::-webkit-details-marker {
+  display: none;
+}
+.prospective summary::after {
+  content: "";
+  float: right;
+  width: 8px;
+  height: 8px;
+  margin-top: 5px;
+  border-right: 2px solid var(--accent);
+  border-bottom: 2px solid var(--accent);
+  transform: rotate(45deg);
+  transition: transform 0.2s ease;
+}
+.prospective[open] summary::after {
+  transform: rotate(-135deg);
+  margin-top: 9px;
+}
+.prospective summary:hover {
+  background: var(--hover);
+}
+.prospective summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.prospective-body {
+  padding: 2px 14px 4px;
+  animation: prospective-fade 0.2s ease;
+}
+@keyframes prospective-fade {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body,
+  .prospective summary::after,
+  .prospective-body {
+    transition: none;
+    animation: none;
+  }
 }
